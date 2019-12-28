@@ -6,10 +6,10 @@ ENV FFMPEG_VERSION=3.3.4
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES video,compute,utility
 
-RUN apt-get update && \
-    apt-get -y install $DEV && \
-    apt-get -y install yasm libx264-dev libmp3lame-dev libopus-dev libvpx-dev && \
-    apt-get -y install libasound2 libass5 libvdpau1 libva-x11-1 libva-drm1 libxcb-shm0 libxcb-xfixes0 libxcb-shape0 libvorbisenc2 libtheora0 && \
+RUN apt update && \
+    apt -y install $DEV && \
+    apt -y install yasm libx264-dev libmp3lame-dev libopus-dev libvpx-dev && \
+    apt -y install libasound2 libass5 libvdpau1 libva-x11-1 libva-drm1 libxcb-shm0 libxcb-xfixes0 libxcb-shape0 libvorbisenc2 libtheora0 && \
 \
 #ffmpeg build
 \
@@ -52,7 +52,7 @@ RUN apt-get update && \
 \
 # nodejs install
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get install -y nodejs && \
+    apt install -y nodejs && \
 \
 # install EPGStation
     cd /usr/local/ && \
@@ -63,12 +63,13 @@ RUN apt-get update && \
 \
 # 不要なパッケージを削除
 \
-    apt-get -y remove $DEV && \
-    apt-get autoremove -y && \
-    apt-get clean && \
+    apt -y remove $DEV && \
+    apt autoremove -y && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/ffmpeg_sources
 
+COPY ./libpcsclite.so.1.0.0 /usr/lib/x86_64-linux-gnu/libpcsclite.so.1
 WORKDIR /usr/local/EPGStation
 
 ENTRYPOINT npm start

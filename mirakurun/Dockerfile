@@ -3,9 +3,9 @@ EXPOSE 40772
 ENV DOCKER="YES"
 ENV DEV="libpcsclite-dev build-essential curl libssl-dev yasm libtool autoconf pkg-config gcc git g++ make automake"
 
-RUN apt-get update && \
-    apt-get -y install pcscd libpcsclite1 libccid pcsc-tools && \
-    apt-get -y install $DEV && \
+RUN apt update && \
+    apt -y install pcscd libpcsclite1 libccid pcsc-tools && \
+    apt -y install $DEV && \
 \
 # recpt1
 \
@@ -18,7 +18,7 @@ RUN apt-get update && \
 \
 # nodejs
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get install -y nodejs && \
+    apt install -y nodejs && \
 \
 # pm2
 \
@@ -33,12 +33,13 @@ RUN apt-get update && \
 \
 # 不要なパッケージを削除
 \
-    apt-get -y remove $DEV && \
-    apt-get autoremove -y && \
-    apt-get clean && \
+    apt -y remove $DEV && \
+    apt autoremove -y && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/recpt1
 
+COPY ./libpcsclite.so.1.0.0 /usr/lib/x86_64-linux-gnu/libpcsclite.so.1
 WORKDIR /usr/lib/node_modules/mirakurun
 
 ENTRYPOINT /etc/init.d/pcscd start && \
