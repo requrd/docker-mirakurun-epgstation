@@ -13,3 +13,6 @@ epgstation/config/*.json
 !epgstation/config/serviceLogConfig.json
 epgstation/data/*.json
 !.gitkeep
+.vscode
+programs.json
+services.json
