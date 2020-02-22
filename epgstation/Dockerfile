@@ -1,51 +1,11 @@
-FROM nvidia/cuda:8.0-devel-ubuntu16.04
+FROM jrottenberg/ffmpeg:4.1-nvidia
 EXPOSE 8888
-ARG CPUCORE="1"
-ENV DEV="make gcc git g++ automake curl wget autoconf build-essential python2.7 libass-dev libfreetype6-dev libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev pkg-config texinfo zlib1g-dev"
-ENV FFMPEG_VERSION=3.3.4
+ENV DEV="make gcc git g++ automake curl build-essential python2.7"
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES video,compute,utility
 
 RUN apt update && \
     apt -y install $DEV && \
-    apt -y install yasm libx264-dev libmp3lame-dev libopus-dev libvpx-dev && \
-    apt -y install libasound2 libass5 libvdpau1 libva-x11-1 libva-drm1 libxcb-shm0 libxcb-xfixes0 libxcb-shape0 libvorbisenc2 libtheora0 && \
-\
-#ffmpeg build
-\
-    mkdir /tmp/ffmpeg_sources && \
-    cd /tmp/ffmpeg_sources && \
-    wget http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 -O ffmpeg.tar.bz2 && \
-    tar xjvf ffmpeg.tar.bz2 && \
-    cd /tmp/ffmpeg_sources/ffmpeg* && \
-    ./configure \
-      --prefix=/usr/local \
-      --disable-shared \
-      --pkg-config-flags=--static \
-      --enable-gpl \
-      --enable-libass \
-      --enable-libfreetype \
-      --enable-libmp3lame \
-      --enable-libopus \
-      --enable-libtheora \
-      --enable-libvorbis \
-      --enable-libvpx \
-      --enable-libx264 \
-      --enable-nonfree \
-      --disable-debug \
-      --disable-doc \
-      --enable-nvenc \
-      --enable-cuda \
-      --enable-cuvid \
-      --enable-libnpp \
-      --extra-cflags=-I/usr/local/cuda/include \
-      --extra-cflags=-I/usr/local/include \
-      --extra-ldflags=-L/usr/local/cuda/lib64 \
-    && \
-    cd /tmp/ffmpeg_sources/ffmpeg* && \
-    make -j${CPUCORE} && \
-    make install && \
-\
 # create dummy libGL.so.1
 # see https://github.com/NVIDIA/nvidia-docker/issues/531
     echo | gcc -shared -o /usr/lib/x86_64-linux-gnu/libGL.so.1 -Wl,-soname=libGL.so.1 -x c - && \
@@ -66,11 +26,14 @@ RUN apt update && \
     apt -y remove $DEV && \
     apt autoremove -y && \
     apt clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /tmp/ffmpeg_sources
+    rm -rf /var/lib/apt/lists/*
 
 COPY ./libpcsclite.so.1.0.0 /usr/lib/x86_64-linux-gnu/libpcsclite.so.1
+COPY ./config /usr/local/EPGStation/config
+COPY ./data /usr/local/EPGStation/data
+COPY ./thumbnail /usr/local/EPGStation/thumbnail
+COPY ./logs /usr/local/EPGStation/logs
 WORKDIR /usr/local/EPGStation
 
-ENTRYPOINT npm start
+ENTRYPOINT ["npm", "start"]
 
