@@ -38,11 +38,11 @@
     "mpegTsStreaming": [
         {
             "name": "1280x720(main)",
-            "cmd": "%FFMPEG% -re -dual_mono_mode main -i pipe:0 -c:a aac -ar 48000 -ab 192k -ac 2 -c:v hevc_nvenc -s 1280x720 -filter:v yadif -aspect 16:9 -vb 3000k -f mpegts pipe:1"
+            "cmd": "%FFMPEG% -re -dual_mono_mode main -i pipe:0 -c:a aac -ar 48000 -ab 192k -ac 2 -c:v hevc_nvenc -b_ref_mode 2 -s 1280x720 -filter:v yadif -aspect 16:9 -vb 3000k -f mpegts pipe:1"
         },
         {
             "name": "720x480(main)",
-            "cmd": "%FFMPEG% -re -dual_mono_mode main -i pipe:0 -c:a aac -ar 48000 -ab 128k -ac 2 -c:v hevc_nvenc -s 720x480 -filter:v yadif -aspect 16:9 -vb 1500k -f mpegts pipe:1"
+            "cmd": "%FFMPEG% -re -dual_mono_mode main -i pipe:0 -c:a aac -ar 48000 -ab 128k -ac 2 -c:v hevc_nvenc -b_ref_mode 2 -s 720x480 -filter:v yadif -aspect 16:9 -vb 1500k -f mpegts pipe:1"
         },
         {
             "name": "無変換"
