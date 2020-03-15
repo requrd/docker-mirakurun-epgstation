@@ -1,4 +1,4 @@
-FROM jrottenberg/ffmpeg:4.1-nvidia
+FROM jrottenberg/ffmpeg:4.2-nvidia
 EXPOSE 8888
 ENV DEV="make gcc git g++ automake curl build-essential python2.7"
 ENV NVIDIA_VISIBLE_DEVICES all
