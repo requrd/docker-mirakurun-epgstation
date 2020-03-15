@@ -16,8 +16,8 @@ function getHeight() {
 }
 
 if [ `getHeight` -gt 720 ]; then
-    $ffmpeg_cmd -y -hwaccel cuvid -codec:v mpeg2_cuvid -deint adaptive -drop_second_field 1 -i "$INPUT" -f mp4 -codec:v hevc_nvenc -codec:a aac "$OUTPUT"
+    $ffmpeg_cmd -y -hwaccel cuvid -codec:v mpeg2_cuvid -deint adaptive -drop_second_field 1 -i "$INPUT" -f mp4 -codec:v hevc_nvenc -b_ref_mode 2 -codec:a aac "$OUTPUT"
 else
-    $ffmpeg_cmd -y -c:v mpeg2_cuvid -deint $deint -dual_mono_mode $mode -i "$INPUT" -f mp4 -c:v h264_nvenc -qp 23 -c:a aac -ar 48000 -ab 192k -ac 2 "$OUTPUT"
+    $ffmpeg_cmd -y -c:v mpeg2_cuvid -deint $deint -dual_mono_mode $mode -i "$INPUT" -f mp4 -c:v h264_nvenc -b_ref_mode 2 -qp 23 -c:a aac -ar 48000 -ab 192k -ac 2 "$OUTPUT"
 fi
 
